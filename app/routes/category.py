@@ -1,5 +1,8 @@
-from fastapi import APIRouter
-from models.category import Category,CategoryCreate
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
+
+from database import get_session
+from models.category import Category, CategoryCreate
 
 router = APIRouter()
 
@@ -11,8 +14,11 @@ async def get_categories():
         Category(id=2, title="sport")
     ]
 
-@router.post("/categories")
-async def create_category(category: CategoryCreate):
-    category  =  Category(id=1,title=category.title , description=category.description)
 
-    return category
+@router.post("/categories", response_model=Category)
+async def create_category(category: CategoryCreate, session: Session = Depends(get_session)):
+    db_category = Category.model_validate(category)
+    session.add(db_category)
+    session.commit()
+    session.refresh(db_category)
+    return db_category
