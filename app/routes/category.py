@@ -15,6 +15,7 @@ async def get_categories():
     ]
 
 
+
 @router.post("/categories", response_model=Category)
 async def create_category(category: CategoryCreate, session: Session = Depends(get_session)):
     db_category = Category.model_validate(category)
