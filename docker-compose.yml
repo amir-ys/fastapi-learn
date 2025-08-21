@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     container_name: fastapi-app
     ports:
-      - "8000:80"
+      - "8001:80"
     volumes:
       - .:/app
     restart: unless-stopped
