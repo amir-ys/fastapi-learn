@@ -22,4 +22,4 @@ async def root():
 
 @app.get("/ping")
 async def root():
-    return {"message": "Hello Bigger Applications ///!"}
+    return {"message": "Hello Bigger Applications  ///!"}
