@@ -16,7 +16,7 @@ services:
 #      context: .
 #      dockerfile: Dockerfile
 #    container_name: fastapi-app
-    image: ghcr.io/amir-ys/fastapi-learn:latest
+    image: ghcr.io/amir-ys/nobat:latest
     ports:
       - "8001:80"
     restart: unless-stopped
