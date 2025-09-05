@@ -15,11 +15,6 @@ app = FastAPI(lifespan=lifespan,debug=True)
 app.include_router(category.router)
 app.include_router(post.router)
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello Bigger Applications///!"}
-
 @app.get("/ping")
 async def root():
     return {"message": "pong"}
