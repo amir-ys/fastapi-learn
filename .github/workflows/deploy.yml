@@ -35,7 +35,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: amindentalcenter
+          username: amir-ys
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Pull existing image (optional)
