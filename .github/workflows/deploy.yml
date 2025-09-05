@@ -64,5 +64,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /root/apps/fastapi-learn
+            export IMAGE_TAG=${{ github.sha }}
             docker compose pull
-            docker compose up -d --build
+            docker compose up -d --build --force-recreate
