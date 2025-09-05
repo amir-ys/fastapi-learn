@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: fastapi-learn
+  IMAGE_NAME: Nobat
   OWNER: amir-ys
 
 jobs:
@@ -63,7 +63,7 @@ jobs:
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /root/apps/fastapi-learn
+            cd /root/apps/Nobat
             export IMAGE_TAG=${{ github.sha }}
             docker compose pull
             docker compose up -d --build --force-recreate
