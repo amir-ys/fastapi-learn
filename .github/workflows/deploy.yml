@@ -77,4 +77,4 @@ jobs:
             echo $GHCR_PAT | docker login ghcr.io -u amir-ys --password-stdin
             export IMAGE_TAG=${{ github.sha }}
             docker compose pull
-            docker compose up -d --build
+            docker compose up -d --build --force-recreate
