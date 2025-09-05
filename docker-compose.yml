@@ -12,10 +12,11 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: fastapi-app
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: fastapi-app
+    image: ghcr.io/amir-ys/fastapi-learn:latest
     ports:
       - "8001:80"
     restart: unless-stopped
