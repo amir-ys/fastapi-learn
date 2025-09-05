@@ -17,12 +17,9 @@ app.include_router(post.router)
 
 
 @app.get("/")
-<<<<<<< HEAD
-=======
 async def root():
     return {"message": "Hello Bigger Applications///!"}
 
 @app.get("/ping")
->>>>>>> parent of 83fd961 (remove unused files)
 async def root():
     return {"message": "Hello Bigger Applications///!"}
