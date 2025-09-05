@@ -19,7 +19,8 @@ jobs:
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /root/apps/Nobat
+            mkdir /root/apps/nobat
+            cd /root/apps/nobat
             git pull origin main
             docker compose pull
             docker compose up -d --build

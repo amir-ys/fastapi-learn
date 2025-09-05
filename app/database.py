@@ -2,8 +2,7 @@ import os
 from sqlmodel import SQLModel, create_engine, Session
 
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg://myuser:mypassword@localhost:5432/mydb"
+    "postgresql+psycopg://myuser:mypassword@db:5432/mydb"
 )
 
 engine = create_engine(DATABASE_URL, echo=True)
