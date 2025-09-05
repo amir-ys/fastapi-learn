@@ -35,10 +35,10 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: amindentalcenter
+          password: ${{ secrets.GHCR_PAT }}
 
-      - name: Pull existing image (optional, prevent conflicts)
+      - name: Pull existing image (optional)
         run: |
           docker pull ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:latest || true
 
