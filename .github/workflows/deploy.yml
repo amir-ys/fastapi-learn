@@ -1,26 +1,80 @@
-name: Deploy FastAPI App
+name: CI/CD FastAPI App
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  OWNER: amindentalcenter
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: root
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Debug secrets
+        run: |
+          echo "HOST is set: ${DEPLOY_HOST:+yes}"
+          echo "USER is set: ${DEPLOY_USER:+yes}"
+          echo "PORT is set: ${DEPLOY_PORT:+yes}"
+          echo "KEY length: $(echo "${SERVER_SSH_KEY}" | wc -c) characters"
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_KEY: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            mkdir /root/apps/nobat
-            cd /root/apps/nobat
-            git pull origin main
+            cd /apps/nobat
+            echo GHCR_PAT | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+            export IMAGE_TAG=${{ github.sha }}
             docker compose pull
             docker compose up -d --build
